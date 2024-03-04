@@ -62,6 +62,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
@@ -95,6 +96,7 @@ fun SportsApp(
             SportsAppBar(
                 isShowingListPage = uiState.isShowingListPage,
                 onBackButtonClick = { viewModel.navigateToListPage() },
+                windowSize = windowSize
             )
         }
     ) { innerPadding ->
@@ -141,20 +143,23 @@ fun SportsApp(
 fun SportsAppBar(
     onBackButtonClick: () -> Unit,
     isShowingListPage: Boolean,
+    windowSize: WindowWidthSizeClass,
     modifier: Modifier = Modifier
 ) {
+    val isShowingDetailPage = windowSize != WindowWidthSizeClass.Expanded && !isShowingListPage
     TopAppBar(
         title = {
             Text(
                 text =
-                if (!isShowingListPage) {
+                if (isShowingDetailPage) {
                     stringResource(R.string.detail_fragment_label)
                 } else {
                     stringResource(R.string.list_fragment_label)
-                }
+                },
+                fontWeight = FontWeight.Bold
             )
         },
-        navigationIcon = if (!isShowingListPage) {
+        navigationIcon = if (isShowingDetailPage) {
             {
                 IconButton(onClick = onBackButtonClick) {
                     Icon(
